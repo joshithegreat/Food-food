@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    background-size: cover;
+    background-position: center;
+}
+
+body.home { background-image: url('IMG_4218.jpeg'); }
+body.menu { background-image: url('IMG_4220.jpeg'); }
+body.cart { background-image: url('IMG_4219.jpeg'); }
+body.thankyou, body.admin, .loading-screen { background-image: url('IMG_4221.jpeg'); }
+
+.loading-screen {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden { display: none; }
+
+h1, h2 {
+    text-align: center;
+}
+
+.category {
+    background: rgba(0,0,0,0.7);
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+button {
+    background-color: orange;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cart-icon {
+    width: 50px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    animation: cartAnimation 1s forwards;
+}
+
+@keyframes cartAnimation {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-20px); }
+    100% { transform: translateX(0); }
+}
