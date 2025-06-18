@@ -1,56 +1,77 @@
-let cart = [];
+// Add item to cart
+function addToCart(itemName, itemPrice) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(item => item.name === itemName);
 
-window.onload = () => {
-    setTimeout(() => {
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('mainContent').classList.remove('hidden');
-    }, 2000);
-};
-
-function addToCart(item, price) {
-    let audio = new Audio('click.mp3');
-    audio.play();
-
-    cart.push({ item, price });
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    alert(item + ' added to cart!');
-    animateCart();
-}
-
-function animateCart() {
-    let cartIcon = document.querySelector('.cart-icon');
-    if (cartIcon) {
-        cartIcon.style.animation = 'cartAnimation 1s';
-        setTimeout(() => { cartIcon.style.animation = ''; }, 1000);
-    }
-}
-
-function goToCart() {
-    window.location.href = 'cart.html';
-}
-
-function placeOrder() {
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders.push(JSON.parse(localStorage.getItem('cart')));
-    localStorage.setItem('orders', JSON.stringify(orders));
-    localStorage.removeItem('cart');
-    window.location.href = 'thankyou.html';
-}
-
-function checkAdmin() {
-    let password = document.getElementById('adminPassword').value;
-    if (password === '1234') {
-        document.getElementById('orders').classList.remove('hidden');
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        let orderList = document.getElementById('orderList');
-        orderList.innerHTML = '';
-        orders.forEach((order, index) => {
-            let li = document.createElement('li');
-            li.textContent = `Order ${index + 1}: ` + order.map(o => o.item).join(', ');
-            orderList.appendChild(li);
-        });
+    if (existingItem) {
+        existingItem.quantity += 1;
     } else {
-        alert('Wrong Password');
+        cart.push({ name: itemName, price: itemPrice, quantity: 1 });
     }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    playClickSound();
+    alert(${itemName} added to cart!);
 }
+
+// Play button click sound
+function playClickSound() {
+    const audio = new Audio('Click.mp3.wav');
+    audio.play();
+}
+
+// Load cart items on cart page
+function loadCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItemsDiv = document.getElementById('cartItems');
+    cartItemsDiv.innerHTML = '';
+
+    if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
+        return;
+    }
+
+    cart.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.textContent = ${item.name} - ₹${item.price} x ${item.quantity};
+        cartItemsDiv.appendChild(itemDiv);
+    });
+}
+
+// Place order and redirect to WhatsApp
+function placeOrder() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
+    let orderDetails = 'Order Details:\n';
+    let total = 0;
+
+    cart.forEach(item => {
+        orderDetails += ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}\n;
+        total += item.price * item.quantity;
+    });
+
+    orderDetails += \nTotal: ₹${total};
+
+    const whatsappURL = https://wa.me/917589882400?text=${encodeURIComponent(orderDetails)};
+    window.location.href = whatsappURL;
+
+    // Clear cart after placing order
+    localStorage.removeItem('cart');
+}
+
+// Attach events when DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementById('cartItems')) {
+        loadCart();
+    }
+
+    const placeOrderButton = document.getElementById('placeOrder');
+    if (placeOrderButton) {
+        placeOrderButton.addEventListener('click', placeOrder);
+    }
+});
