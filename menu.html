@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Anirudh's Food</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="menu">
+    <h1>Anirudh's Food Menu</h1>
+
+    <div class="category">
+        <h2>Maggi</h2>
+        <div class="item">
+            <span>Plain Maggi</span> <span>₹25</span> <button onclick="addToCart('Plain Maggi', 25)">Add</button>
+        </div>
+        <div class="item">
+            <span>Veggie Maggi</span> <span>₹35</span> <button onclick="addToCart('Veggie Maggi', 35)">Add</button>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Snacks</h2>
+        <div class="item">
+            <span>Bread Roll</span> <span>₹40/plate</span> <button onclick="addToCart('Bread Roll', 40)">Add</button>
+        </div>
+        <div class="item">
+            <span>Sandwich</span> <span>₹40</span> <button onclick="addToCart('Sandwich', 40)">Add</button>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Specials</h2>
+        <div class="item">
+            <span>Veg Chilla</span> <span>₹25</span> <button onclick="addToCart('Veg Chilla', 25)">Add</button>
+        </div>
+        <div class="item">
+            <span>Noodles (Half)</span> <span>₹20</span> <button onclick="addToCart('Noodles (Half)', 20)">Add</button>
+        </div>
+        <div class="item">
+            <span>Noodles (Full)</span> <span>₹40</span> <button onclick="addToCart('Noodles (Full)', 40)">Add</button>
+        </div>
+        <div class="item">
+            <span>Momos</span> <span>₹40</span> <button onclick="addToCart('Momos', 40)">Add</button>
+        </div>
+    </div>
+
+    <img src="cart.png" class="cart-icon" onclick="goToCart()">
+
+</body>
+</html>
