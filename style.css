@@ -6,10 +6,10 @@ body {
     background-position: center;
 }
 
-body.home { background-image: url('IMG_4218.jpeg'); }
-body.menu { background-image: url('IMG_4220.jpeg'); }
-body.cart { background-image: url('IMG_4219.jpeg'); }
-body.thankyou, body.admin, .loading-screen { background-image: url('IMG_4221.jpeg'); }
+body.home { background-image: url('IMG_4218.JPG'); }
+body.menu { background-image: url('IMG_4220.JPG'); }
+body.cart { background-image: url('IMG_4219.JPG'); }
+body.thankyou, body.admin, .loading-screen { background-image: url('IMG_4221.JPG'); }
 
 .loading-screen {
     position: fixed;
