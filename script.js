@@ -1,77 +1,125 @@
-// Initialize cart
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+Warning: truncated output (original token count: 1205)
+Total output lines: 151
 
-// Function to add item to cart
+const CART_STORAGE_KEY = 'cart';
+const ORDERS_STORAGE_KEY = 'orders';
+
+function readStoredArray(key) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(value) ? value : [];
+    } catch {
+        return [];
+    }
+}
+
+let cart = readStoredArray(CART_STORAGE_KEY);
+
+function saveCart() {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+}
+
+function getCartTotal(items = cart) {
+    return items.reduce((total, item) => total + Number(item.price || 0), 0);
+}
+
+function formatPrice(price) {
+    return `₹${Number(price || 0)}`;
+}
+
 function addToCart(itemName, itemPrice) {
-    cart.push({ name: itemName, price: itemPrice });
-    localStorage.setItem('cart', JSON.stringify(cart));
+    cart.push({ name: itemName, price: Number(itemPrice) });
+    saveCart();
     alert(`${itemName} added to cart!`);
 }
 
-// Function to display cart items on cart page
 function displayCart() {
     const cartItemsDiv = document.getElementById('cartItems');
     const placeOrderButton = document.getElementById('placeOrderButton');
-    cartItemsDiv.innerHTML = '';
+    const cartTotal = document.getElementById('cartTotal');
 
-    if (cart.length === 0) {
-        cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
-        placeOrderButton.style.display = 'none';
-    } else {
-        cart.forEach((item, index) => {
-            const itemElement = document.createElement('div');
-            itemElement.innerHTML = `<p>${item.name} - ₹${item.price}</p>`;
-            cartItemsDiv.appendChild(itemElement);
-        });
-        placeOrderButton.style.display = 'block';
-    }
-}
-
-// Function to place order
-function placeOrder() {
-    if (cart.length === 0) {
-        alert('Your cart is empty!');
+    if (!cartItemsDiv || !placeOrderButton) {
         return;
     }
 
-    // Send order via WhatsApp
-    let message = 'New Order:\n';
-    cart.forEach(item => {
-        message += `${item.name} - ₹${item.price}\n`;
-    });
+    cartItemsDiv.replaceChildren();
 
-    let url = `https://wa.me/917589882400?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    if (cart.length === 0) {
+        const emptyMessage = document.createElement('p');
+        emptyMessage.textContent = 'Your cart is empty.';
+        cartItemsDiv.appendChild(emptyMessage);
+        placeOrderButton.disabled = true;
+    } else {
+        cart.forEach((item, index) => {
+            const itemElement = document.createElement('div');
+            const itemText = document.createElement('span');
+            const removeButton = document.createElement('button');
 
-    // Save order history
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders.push({ order: cart, time: new Date().toLocaleString() });
-    localStorage.setItem('orders', JSON.stringify(orders));
+            itemText.textContent = `${item.name} - ${formatPrice(item.price)}`;
+            removeButton.type = 'button';
+            removeButton.textContent = 'Remove';
+            removeButton.addEventListener('click', () => {
+                cart.splice(index, 1);
+                saveCart();
+                displayCart();
+            });
 
-    // Clear cart and redirect to Thank You page
-    cart = [];
-    localStorage.setItem('cart', JSON.stringify(cart));
+            itemElement.append(itemText, removeButton);
+            cartItemsDiv.appendC…205 tokens truncated…saveCart();
+    window.open(`https://wa.me/917589882400?text=${encodeURIComponent(message)}`, '_blank');
     window.location.href = 'thankyou.html';
 }
 
-// Function to display orders in admin panel
 function displayOrders() {
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
     const ordersDiv = document.getElementById('orders');
-    ordersDiv.innerHTML = '';
+    if (!ordersDiv) {
+        return;
+    }
+
+    const orders = readStoredArray(ORDERS_STORAGE_KEY);
+    const existingTitle = ordersDiv.querySelector('h2');
+    ordersDiv.replaceChildren();
+    if (existingTitle) {
+        ordersDiv.appendChild(existingTitle);
+    }
 
     if (orders.length === 0) {
-        ordersDiv.innerHTML = '<p>No orders found.</p>';
+        const emptyMessage = document.createElement('p');
+        emptyMessage.textContent = 'No orders found on this browser yet.';
+        ordersDiv.appendChild(emptyMessage);
         return;
     }
 
     orders.forEach((order, index) => {
-        const orderElement = document.createElement('div');
-        let itemsList = '';
-        order.order.forEach(item => {
-            itemsList += `<li>${item.name} - ₹${item.price}</li>`;
+        const orderElement = document.createElement('section');
+        const orderTitle = document.createElement('h3');
+        const itemsList = document.createElement('ul');
+        const items = Array.isArray(order.items) ? order.items : order.order || [];
+
+        orderTitle.textContent = `Order ${index + 1} - ${order.time || 'Unknown time'}`;
+        items.forEach((item) => {
+            const itemElement = document.createElement('li');
+            itemElement.textContent = `${item.name} - ${formatPrice(item.price)}`;
+            itemsList.appendChild(itemElement);
         });
-        orderElement.innerHTML = `<h3>Order ${index + 1} - ${order.time}</h3><ul>${itemsList}</ul>`;
+
+        orderElement.append(orderTitle, itemsList);
+        if (typeof order.total === 'number') {
+            const totalElement = document.createElement('p');
+            totalElement.textContent = `Total: ${formatPrice(order.total)}`;
+            orderElement.appendChild(totalElement);
+        }
         ordersDiv.appendChild(orderElement);
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const placeOrderButton = document.getElementById('placeOrderButton');
+    if (placeOrderButton) {
+        placeOrderButton.addEventListener('click', placeOrder);
+        displayCart();
+    }
+
+    displayOrders();
+});
+

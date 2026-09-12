@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Cart - Anirudh's Food</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
             background-image: url('IMG_4219.JPG');
-            background-size: cover;
-            background-position: center;
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
@@ -21,6 +19,17 @@
             font-size: 18px;
         }
 
+        #cartItems > div {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            max-width: 420px;
+            margin: 10px auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 5px;
+        }
+
         button {
             padding: 10px 20px;
             font-size: 18px;
@@ -30,16 +39,24 @@
             cursor: pointer;
         }
 
-        button:hover {
+        button:hover:not(:disabled) {
             background-color: green;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
         }
     </style>
 </head>
-<body>
+<body class="cart">
     <h1>Your Cart</h1>
-    <div id="cartItems"></div>
-    <button id="placeOrder">Place Order</button>
+    <div id="cartItems" aria-live="polite"></div>
+    <p id="cartTotal"></p>
+    <button id="placeOrderButton" type="button">Place Order</button>
+    <p><a href="menu.html">Continue shopping</a></p>
 
     <script src="script.js"></script>
 </body>
 </html>
+
